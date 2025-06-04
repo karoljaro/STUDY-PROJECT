@@ -3,3 +3,4 @@ pytest-cov
 PyYAML
 mypy
 types-PyYAML
+PyQt5
