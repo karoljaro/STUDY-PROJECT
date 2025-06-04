@@ -1,5 +1,5 @@
 """
-Data format converter - Task5: YAML saving added
+Data format converter - Task6: XML parsing added
 Supports XML, JSON, and YAML format conversion
 """
 
@@ -8,6 +8,7 @@ from pathlib import Path
 import sys
 from parsers.json_parser import JSONParser
 from parsers.yaml_parser import YAMLParser
+from parsers.xml_parser import XMLParser
 
 
 def validate_files(input_path: Path, output_path: Path) -> None:
@@ -37,7 +38,7 @@ def detect_input_format(file_path: Path) -> str:
 
 
 def main() -> None:
-    """Main function - Task5: Added YAML saving."""
+    """Main function - Task6: Added XML loading."""
     parser = argparse.ArgumentParser(
         description="YAML, XML, JSON format converter",
         epilog=r"Example: python main.py input.json output.yaml --format yaml"
@@ -69,8 +70,7 @@ def main() -> None:
             
             # Show some info about the loaded data
             file_info = JSONParser.get_file_info(input_path)
-            print(f"File size: {file_info['size_bytes']} bytes")
-        # Task4: YAML loading implementation
+            print(f"File size: {file_info['size_bytes']} bytes")        # Task4: YAML loading implementation
         elif input_format == 'yaml':
             print("Reading YAML file...")
             data = YAMLParser.load(input_path)
@@ -79,8 +79,17 @@ def main() -> None:
             # Show some info about the loaded data
             file_info = YAMLParser.get_file_info(input_path)
             print(f"File size: {file_info['size_bytes']} bytes")
+        # Task6: XML loading implementation
+        elif input_format == 'xml':
+            print("Reading XML file...")
+            data = XMLParser.load(input_path)
+            print(f"Successfully loaded XML with {len(data)} top-level keys")
+            
+            # Show some info about the loaded data
+            file_info = XMLParser.get_file_info(input_path)
+            print(f"File size: {file_info['size_bytes']} bytes")
         else:
-            print(f"Note: {input_format.upper()} parsing not yet implemented - will be added in Task6-7")
+            print(f"Note: {input_format.upper()} parsing not yet implemented")
             return
           # Task3: JSON saving implementation
         if args.format == 'json':
