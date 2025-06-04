@@ -1,7 +1,7 @@
 """
-XML Parser module - Task6: XML file reading and validation
+XML Parser module - Task7: XML file reading, validation and saving
 
-This module provides functionality to read from XML files
+This module provides functionality to read from and write to XML files
 with proper error handling and validation.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict
 
 
 class XMLParser:
-    """Parser for XML file operations - Task6: Loading and validation."""
+    """Parser for XML file operations - Task7: Loading, validation and saving."""
     
     @staticmethod
     def load(file_path: Path) -> Dict[str, Any]:
@@ -47,6 +47,38 @@ class XMLParser:
             raise PermissionError(f"No permission to read file: {file_path}")
         except Exception as e:
             raise ValueError(f"Error reading XML file {file_path}: {e}")
+    
+    @staticmethod
+    def save(data: Dict[str, Any], file_path: Path) -> None:
+        """
+        Save data to an XML file.
+        
+        Args:
+            data: Dictionary containing data to save as XML
+            file_path: Path where to save the XML file
+            
+        Raises:
+            ValueError: If data cannot be converted to XML
+            PermissionError: If there's no permission to write the file
+        """
+        try:
+            # Create parent directories if they don't exist
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Convert dictionary to XML element
+            root_element = XMLParser._dict_to_element(data)
+            
+            # Create XML tree
+            tree = ET.ElementTree(root_element)
+            
+            # Write to file with proper formatting
+            ET.indent(tree, space="  ", level=0)
+            tree.write(file_path, encoding="utf-8", xml_declaration=True)
+            
+        except PermissionError:
+            raise PermissionError(f"No permission to write file: {file_path}")
+        except Exception as e:
+            raise ValueError(f"Error saving XML file {file_path}: {e}")
     
     @staticmethod
     def validate(file_path: Path) -> bool:
@@ -144,3 +176,40 @@ class XMLParser:
             return list(result.values())[0]
         
         return result if result else None
+    
+    @staticmethod
+    def _dict_to_element(data: Dict[str, Any], root_tag: str = "root") -> ET.Element:
+        """
+        Convert dictionary to XML element.
+        
+        Args:
+            data: Dictionary containing the data
+            root_tag: Name of the root tag for the XML
+            
+        Returns:
+            XML element representing the data
+        """
+        def _build_element(key: str, value: Any) -> ET.Element:
+            if isinstance(value, dict):
+                elem = ET.Element(key)
+                for subkey, subvalue in value.items():
+                    child_elem = _build_element(subkey, subvalue)
+                    elem.append(child_elem)
+                return elem
+            elif isinstance(value, list):
+                elem = ET.Element(key)
+                for item in value:
+                    child_elem = _build_element("item", item)
+                    elem.append(child_elem)
+                return elem
+            else:
+                elem = ET.Element(key)
+                elem.text = str(value)
+                return elem
+        
+        root_element = ET.Element(root_tag)
+        for key, value in data.items():
+            child_element = _build_element(key, value)
+            root_element.append(child_element)
+        
+        return root_element
