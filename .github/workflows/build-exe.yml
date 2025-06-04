@@ -5,12 +5,15 @@ on:
   # a) Automatically once a week (every Monday at 9:00 AM UTC)
 #   schedule:
 #     - cron: '0 9 * * 1'
-  
-  # b) Automatically after pushing to master/main
+    # b) Automatically after pushing to master/main
   push:
     branches: [ main, master ]
   
-  # c) Manually by user
+  # c) On pull requests to master/main
+  pull_request:
+    branches: [ main, master ]
+  
+  # d) Manually by user
 #   workflow_dispatch:
 
 jobs:
