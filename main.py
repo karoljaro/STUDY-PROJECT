@@ -1,5 +1,5 @@
 """
-Data format converter - Task2: JSON parsing added
+Data format converter - Task3: JSON saving added
 Supports XML, JSON, and YAML format conversion
 """
 
@@ -36,7 +36,7 @@ def detect_input_format(file_path: Path) -> str:
 
 
 def main() -> None:
-    """Main function - Task2: Added JSON loading."""
+    """Main function - Task3: Added JSON saving."""
     parser = argparse.ArgumentParser(
         description="YAML, XML, JSON format converter",
         epilog=r"Example: python main.py input.json output.yaml --format yaml"
@@ -61,22 +61,26 @@ def main() -> None:
         print(f"✓ Detected input format: {input_format.upper()}")
         print(f"✓ Output file: {output_path}")
         print(f"✓ Target output format: {args.format.upper()}")
-        
-        # Task2: JSON loading implementation
+          # Task2: JSON loading implementation
         if input_format == 'json':
             print("Reading JSON file...")
             data = JSONParser.load(input_path)
             print(f"Successfully loaded JSON with {len(data)} top-level keys")
-            print("✓ JSON file loaded and validated successfully!")
             
             # Show some info about the loaded data
             file_info = JSONParser.get_file_info(input_path)
             print(f"File size: {file_info['size_bytes']} bytes")
         else:
             print(f"Note: {input_format.upper()} parsing not yet implemented - will be added in Task4-7")
+            return
         
-        # TODO: File conversion will be implemented in next tasks (Task3-7)
-        print("Note: File conversion not yet implemented - will be added in Task3-7")
+        # Task3: JSON saving implementation
+        if args.format == 'json':
+            print("Saving as JSON...")
+            JSONParser.save(data, output_path)
+            print(f"✓ JSON file saved successfully to: {output_path}")
+        else:
+            print(f"Note: {args.format.upper()} output not yet implemented - will be added in Task4-7")
         
     except (FileNotFoundError, ValueError, PermissionError) as err:
         print(f"Error: {err}", file=sys.stderr)

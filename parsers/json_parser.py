@@ -1,7 +1,7 @@
 """
-JSON Parser module - Task2: JSON file reading and validation
+JSON Parser module - Task3: JSON file reading, writing and validation
 
-This module provides functionality to read from JSON files
+This module provides functionality to read from and write to JSON files
 with proper error handling and validation.
 """
 
@@ -11,7 +11,7 @@ from typing import Any, Dict, Union
 
 
 class JSONParser:
-    """Parser for JSON file operations - Task2: Loading and validation only."""
+    """Parser for JSON file operations - Task3: Loading, saving and validation."""
     
     @staticmethod
     def load(file_path: Path) -> Dict[str, Any]:
@@ -45,6 +45,32 @@ class JSONParser:
             raise PermissionError(f"No permission to read file: {file_path}")
         except Exception as e:
             raise ValueError(f"Error reading JSON file {file_path}: {e}")
+    
+    @staticmethod
+    def save(data: Union[Dict[str, Any], Any], file_path: Path) -> None:
+        """
+        Save data to a JSON file.
+        
+        Args:
+            data: Data to save (dictionary or other JSON-serializable object)
+            file_path: Path where to save the JSON file
+            
+        Raises:
+            PermissionError: If there's no permission to write the file
+            ValueError: If the data is not JSON serializable
+        """
+        try:
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(file_path, 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=2, ensure_ascii=False, sort_keys=True)
+                
+        except PermissionError:
+            raise PermissionError(f"No permission to write file: {file_path}")
+        except TypeError as e:
+            raise ValueError(f"Data is not JSON serializable: {e}")
+        except Exception as e:
+            raise ValueError(f"Error writing JSON file {file_path}: {e}")
     
     @staticmethod
     def validate(file_path: Path) -> bool:
