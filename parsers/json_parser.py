@@ -8,6 +8,16 @@ with proper error handling and validation.
 import json
 from pathlib import Path
 from typing import Any, Dict, Union
+import datetime
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    """Custom JSON encoder to handle datetime objects."""
+    
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 class JSONParser:
@@ -63,7 +73,7 @@ class JSONParser:
             file_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(file_path, 'w', encoding='utf-8') as file:
-                json.dump(data, file, indent=2, ensure_ascii=False, sort_keys=True)
+                json.dump(data, file, indent=2, ensure_ascii=False, sort_keys=True, cls=DateTimeEncoder)
                 
         except PermissionError:
             raise PermissionError(f"No permission to write file: {file_path}")
