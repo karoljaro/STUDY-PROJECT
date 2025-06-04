@@ -1,6 +1,6 @@
 """
-Data format converter - Task6: XML parsing added
-Supports XML, JSON, and YAML format conversion
+Data format converter - Task7: XML saving added
+Supports XML, JSON, and YAML format conversion with full bidirectional support
 """
 
 import argparse
@@ -38,7 +38,7 @@ def detect_input_format(file_path: Path) -> str:
 
 
 def main() -> None:
-    """Main function - Task6: Added XML loading."""
+    """Main function - Task7: Added XML saving functionality."""
     parser = argparse.ArgumentParser(
         description="YAML, XML, JSON format converter",
         epilog=r"Example: python main.py input.json output.yaml --format yaml"
@@ -95,14 +95,18 @@ def main() -> None:
         if args.format == 'json':
             print("Saving as JSON...")
             JSONParser.save(data, output_path)
-            print(f"✓ JSON file saved successfully to: {output_path}")
-        # Task5: YAML saving implementation
+            print(f"✓ JSON file saved successfully to: {output_path}")        # Task5: YAML saving implementation
         elif args.format == 'yaml':
             print("Saving as YAML...")
             YAMLParser.save(data, output_path)
             print(f"✓ YAML file saved successfully to: {output_path}")
+        # Task7: XML saving implementation
+        elif args.format == 'xml':
+            print("Saving as XML...")
+            XMLParser.save(data, output_path)
+            print(f"✓ XML file saved successfully to: {output_path}")
         else:
-            print(f"Note: {args.format.upper()} output not yet implemented - will be added in Task6-7")
+            print(f"Note: {args.format.upper()} output not yet implemented")
         
     except (FileNotFoundError, ValueError, PermissionError) as err:
         print(f"Error: {err}", file=sys.stderr)
