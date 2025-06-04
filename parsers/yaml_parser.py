@@ -7,7 +7,7 @@ with proper error handling and validation.
 
 import yaml
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Union, Union
 
 
 class YAMLParser:
@@ -94,3 +94,30 @@ class YAMLParser:
                 "error": str(e),
                 "size_bytes": file_path.stat().st_size if file_path.exists() else 0
             }
+    
+    @staticmethod
+    def save(data: Union[Dict[str, Any], Any], file_path: Path) -> None:
+        """
+        Save data to a YAML file.
+        
+        Args:
+            data: Data to save (dictionary or other YAML-serializable object)
+            file_path: Path where to save the YAML file
+            
+        Raises:
+            PermissionError: If there's no permission to write the file
+            ValueError: If the data is not YAML serializable
+        """
+        try:
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(file_path, 'w', encoding='utf-8') as file:
+                yaml.dump(data, file, indent=2, allow_unicode=True, 
+                         sort_keys=True, default_flow_style=False)
+                
+        except PermissionError:
+            raise PermissionError(f"No permission to write file: {file_path}")
+        except yaml.YAMLError as e:
+            raise ValueError(f"Data is not YAML serializable: {e}")
+        except Exception as e:
+            raise ValueError(f"Error writing YAML file {file_path}: {e}")
