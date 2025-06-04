@@ -1,11 +1,12 @@
 """
-Data format converter - Task1: Argument parsing
+Data format converter - Task2: JSON parsing added
 Supports XML, JSON, and YAML format conversion
 """
 
 import argparse
 from pathlib import Path
 import sys
+from parsers.json_parser import JSONParser
 
 
 def validate_files(input_path: Path, output_path: Path) -> None:
@@ -35,7 +36,7 @@ def detect_input_format(file_path: Path) -> str:
 
 
 def main() -> None:
-    """Main function - Task1: Argument parsing only."""
+    """Main function - Task2: Added JSON loading."""
     parser = argparse.ArgumentParser(
         description="YAML, XML, JSON format converter",
         epilog=r"Example: python main.py input.json output.yaml --format yaml"
@@ -60,10 +61,22 @@ def main() -> None:
         print(f"✓ Detected input format: {input_format.upper()}")
         print(f"✓ Output file: {output_path}")
         print(f"✓ Target output format: {args.format.upper()}")
-        print("✓ Arguments parsed and validated successfully!")
         
-        # TODO: File conversion will be implemented in next tasks (Task2-7)
-        print("Note: File conversion not yet implemented - will be added in Task2-7")
+        # Task2: JSON loading implementation
+        if input_format == 'json':
+            print("Reading JSON file...")
+            data = JSONParser.load(input_path)
+            print(f"Successfully loaded JSON with {len(data)} top-level keys")
+            print("✓ JSON file loaded and validated successfully!")
+            
+            # Show some info about the loaded data
+            file_info = JSONParser.get_file_info(input_path)
+            print(f"File size: {file_info['size_bytes']} bytes")
+        else:
+            print(f"Note: {input_format.upper()} parsing not yet implemented - will be added in Task4-7")
+        
+        # TODO: File conversion will be implemented in next tasks (Task3-7)
+        print("Note: File conversion not yet implemented - will be added in Task3-7")
         
     except (FileNotFoundError, ValueError, PermissionError) as err:
         print(f"Error: {err}", file=sys.stderr)
