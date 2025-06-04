@@ -5,7 +5,8 @@ on:
   # a) Automatically once a week (every Monday at 9:00 AM UTC)
 #   schedule:
 #     - cron: '0 9 * * 1'
-    # b) Automatically after pushing to master/main
+  
+  # b) Automatically after pushing to master/main
   push:
     branches: [ main, master ]
   
@@ -81,14 +82,14 @@ jobs:
         Write-Host "Release package created with version: $version" -ForegroundColor Cyan
         
     - name: Upload CLI executable artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: DataFormatConverter-CLI-Windows
         path: release/DataFormatConverter-CLI.exe
         retention-days: 30
         
     - name: Upload complete release package
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: DataFormatConverter-Complete-Package
         path: release/
