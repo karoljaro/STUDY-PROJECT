@@ -1,6 +1,6 @@
 """
-GUI application for data format converter - Task8
-PyQt5-based graphical user interface for converting between XML, JSON, and YAML formats
+GUI application for data format converter - Task9
+PyQt5-based graphical user interface with asynchronous file operations
 """
 
 import sys
@@ -96,7 +96,7 @@ class FormatConverterGUI(QMainWindow):
         
     def init_ui(self):
         """Initialize the user interface."""
-        self.setWindowTitle("Data Format Converter - Task8")
+        self.setWindowTitle("Data Format Converter - Task9")
         self.setGeometry(100, 100, 800, 600)
         
         # Central widget

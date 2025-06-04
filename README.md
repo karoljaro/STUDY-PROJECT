@@ -107,7 +107,7 @@ python main.py tests/test_input.xml output.json --format json
 - [x] **Task 6**: XML parser implementation
 - [x] **Task 7**: XML saving functionality
 - [x] **Task 8**: GUI implementation with PyQt5
-- [ ] **Task 9**: Asynchronous file operations (Coming Soon)
+- [x] **Task 9**: Asynchronous file operations with DateTime support
 
 ## Requirements
 
