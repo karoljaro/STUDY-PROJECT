@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <name>Test Application</name>
+    <version>1.2.3</version>
+    <author>
+        <name>Bob Wilson</name>
+        <email>bob.wilson@example.com</email>
+    </author>
+    <features>
+        <feature>Data conversion</feature>
+        <feature>XML processing</feature>
+        <feature>Validation</feature>
+    </features>
+    <config enabled="true">
+        <debug>false</debug>
+        <max_file_size>20971520</max_file_size>
+        <supported_formats>
+            <format>json</format>
+            <format>yaml</format>
+            <format>xml</format>
+        </supported_formats>
+        <logging level="WARN">
+            <enabled>true</enabled>
+            <file>warn.log</file>
+        </logging>
+        <security>
+            <encryption enabled="true">
+                <algorithm>AES-256</algorithm>
+                <key_length>256</key_length>
+            </encryption>
+            <authentication>
+                <method>OAuth2</method>
+                <timeout>3600</timeout>
+            </authentication>
+        </security>
+    </config>
+    <metadata>
+        <created>2024-03-10</created>
+        <last_updated>2024-06-04</last_updated>
+        <license>GPL-3.0</license>
+        <tags>
+            <tag>converter</tag>
+            <tag>utility</tag>
+            <tag>cross-platform</tag>
+        </tags>
+    </metadata>
+</application>

@@ -1,0 +1,28 @@
+{
+  "name": "Test Application",
+  "version": "1.2.3",
+  "author": {
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  },
+  "features": [
+    "Data conversion",
+    "GUI interface",
+    "Multi-format support"
+  ],
+  "config": {
+    "debug": true,
+    "max_file_size": 10485760,
+    "supported_formats": ["json", "yaml", "xml"],
+    "logging": {
+      "enabled": true,
+      "level": "INFO",
+      "file": "app.log"
+    }
+  },
+  "metadata": {
+    "created": "2024-01-15",
+    "last_updated": "2024-06-04",
+    "license": "MIT"
+  }
+}

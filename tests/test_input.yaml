@@ -1,0 +1,32 @@
+name: Test Application
+version: 1.2.3
+author:
+  name: Jane Smith
+  email: jane.smith@example.com
+features:
+  - Data conversion
+  - YAML parsing
+  - Configuration management
+config:
+  debug: false
+  max_file_size: 5242880
+  supported_formats:
+    - json
+    - yaml
+    - xml
+  logging:
+    enabled: true
+    level: DEBUG
+    file: debug.log
+settings:
+  theme: dark
+  language: en
+  auto_save: true
+  backup:
+    enabled: true
+    interval: 300
+    location: ./backups
+metadata:
+  created: 2024-02-20
+  last_updated: 2024-06-04
+  license: Apache-2.0
