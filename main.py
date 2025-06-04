@@ -1,0 +1,74 @@
+"""
+Data format converter - Task1: Argument parsing
+Supports XML, JSON, and YAML format conversion
+"""
+
+import argparse
+from pathlib import Path
+import sys
+
+
+def validate_files(input_path: Path, output_path: Path) -> None:
+    """Validate input and output file paths."""
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file does not exist: {input_path}")
+    
+    if not input_path.is_file():
+        raise ValueError(f"Input path is not a file: {input_path}")
+    
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+    except PermissionError:
+        raise PermissionError(f"No write permission for: {output_path.parent}")
+
+
+def detect_input_format(file_path: Path) -> str:
+    """Detect input file format based on extension."""
+    extension = file_path.suffix.lower()
+    format_map = {
+        '.json': 'json',
+        '.yaml': 'yaml',
+        '.yml': 'yaml',
+        '.xml': 'xml'
+    }
+    return format_map.get(extension, 'unknown')
+
+
+def main() -> None:
+    """Main function - Task1: Argument parsing only."""
+    parser = argparse.ArgumentParser(
+        description="YAML, XML, JSON format converter",
+        epilog=r"Example: python main.py input.json output.yaml --format yaml"
+    )
+    parser.add_argument("input_file", help="Input file path")
+    parser.add_argument("output_file", help="Output file path")
+    parser.add_argument("--format", choices=["yaml", "xml", "json"], help="Output format", required=True)
+
+    args = parser.parse_args()
+
+    input_path = Path(args.input_file)
+    output_path = Path(args.output_file)
+
+    try:
+        validate_files(input_path=input_path, output_path=output_path)
+        
+        input_format = detect_input_format(input_path)
+        if input_format == 'unknown':
+            raise ValueError(f"Unsupported input file format: {input_path.suffix}")
+        
+        print(f"✓ Input file: {input_path}")
+        print(f"✓ Detected input format: {input_format.upper()}")
+        print(f"✓ Output file: {output_path}")
+        print(f"✓ Target output format: {args.format.upper()}")
+        print("✓ Arguments parsed and validated successfully!")
+        
+        # TODO: File conversion will be implemented in next tasks (Task2-7)
+        print("Note: File conversion not yet implemented - will be added in Task2-7")
+        
+    except (FileNotFoundError, ValueError, PermissionError) as err:
+        print(f"Error: {err}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
