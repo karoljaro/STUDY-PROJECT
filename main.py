@@ -1,5 +1,5 @@
 """
-Data format converter - Task3: JSON saving added
+Data format converter - Task4: YAML parsing added
 Supports XML, JSON, and YAML format conversion
 """
 
@@ -7,6 +7,7 @@ import argparse
 from pathlib import Path
 import sys
 from parsers.json_parser import JSONParser
+from parsers.yaml_parser import YAMLParser
 
 
 def validate_files(input_path: Path, output_path: Path) -> None:
@@ -60,8 +61,7 @@ def main() -> None:
         print(f"✓ Input file: {input_path}")
         print(f"✓ Detected input format: {input_format.upper()}")
         print(f"✓ Output file: {output_path}")
-        print(f"✓ Target output format: {args.format.upper()}")
-          # Task2: JSON loading implementation
+        print(f"✓ Target output format: {args.format.upper()}")        # Task2: JSON loading implementation
         if input_format == 'json':
             print("Reading JSON file...")
             data = JSONParser.load(input_path)
@@ -70,8 +70,17 @@ def main() -> None:
             # Show some info about the loaded data
             file_info = JSONParser.get_file_info(input_path)
             print(f"File size: {file_info['size_bytes']} bytes")
+        # Task4: YAML loading implementation
+        elif input_format == 'yaml':
+            print("Reading YAML file...")
+            data = YAMLParser.load(input_path)
+            print(f"Successfully loaded YAML with {len(data)} top-level keys")
+            
+            # Show some info about the loaded data
+            file_info = YAMLParser.get_file_info(input_path)
+            print(f"File size: {file_info['size_bytes']} bytes")
         else:
-            print(f"Note: {input_format.upper()} parsing not yet implemented - will be added in Task4-7")
+            print(f"Note: {input_format.upper()} parsing not yet implemented - will be added in Task6-7")
             return
         
         # Task3: JSON saving implementation
