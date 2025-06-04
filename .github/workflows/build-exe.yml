@@ -1,0 +1,104 @@
+name: Build Data Format Converter Executable
+
+# Trigger workflow on:
+on:
+  # a) Automatically once a week (every Monday at 9:00 AM UTC)
+#   schedule:
+#     - cron: '0 9 * * 1'
+  
+  # b) Automatically after pushing to master/main
+  push:
+    branches: [ main, master ]
+  
+  # c) Manually by user
+#   workflow_dispatch:
+
+jobs:
+  build-windows-exe:
+    # Use latest available Windows server
+    runs-on: windows-latest
+    
+    # Use PowerShell as default shell
+    defaults:
+      run:
+        shell: powershell
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies using installResources.ps1
+      run: |
+        Write-Host "Running installResources.ps1 script..." -ForegroundColor Green
+        .\installResources.ps1
+        
+    - name: Install PyInstaller if not present
+      run: |
+        Write-Host "Ensuring PyInstaller is installed..." -ForegroundColor Yellow
+        pip install pyinstaller
+        
+    - name: Build CLI executable
+      run: |
+        Write-Host "Building CLI executable..." -ForegroundColor Green
+        pyinstaller --onefile --name="DataFormatConverter-CLI" main.py
+        
+    - name: Test executables
+      run: |
+        Write-Host "Testing CLI executable..." -ForegroundColor Yellow
+        .\dist\DataFormatConverter-CLI.exe --help
+        
+        Write-Host "Listing built files..." -ForegroundColor Yellow
+        Get-ChildItem .\dist\
+        
+    - name: Create release package
+      run: |
+        Write-Host "Creating release package..." -ForegroundColor Green
+        
+        # Create release directory
+        New-Item -ItemType Directory -Path "release" -Force
+        
+        # Copy CLI executable
+        Copy-Item "dist\DataFormatConverter-CLI.exe" "release\"
+        
+        # Copy documentation and test files
+        Copy-Item "README.md" "release\"
+        Copy-Item "LICENSE" "release\" -ErrorAction SilentlyContinue
+        Copy-Item -Recurse "tests" "release\" -ErrorAction SilentlyContinue
+        
+        # Create version info
+        $date = Get-Date -Format "yyyy-MM-dd_HH-mm"
+        $version = "v1.0.0-$date"
+        $version | Out-File "release\VERSION.txt"
+        
+        Write-Host "Release package created with version: $version" -ForegroundColor Cyan
+        
+    - name: Upload CLI executable artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: DataFormatConverter-CLI-Windows
+        path: release/DataFormatConverter-CLI.exe
+        retention-days: 30
+        
+    - name: Upload complete release package
+      uses: actions/upload-artifact@v3
+      with:
+        name: DataFormatConverter-Complete-Package
+        path: release/
+        retention-days: 90
+        
+    - name: Build summary
+      run: |
+        Write-Host "`n=== BUILD SUMMARY ===" -ForegroundColor Cyan
+        Write-Host "✅ CLI Executable: DataFormatConverter-CLI.exe" -ForegroundColor Green
+        Write-Host "✅ Complete package with documentation and tests" -ForegroundColor Green
+        Write-Host "✅ Artifacts uploaded to GitHub" -ForegroundColor Green
+        
+        $filesCLI = Get-Item "release\DataFormatConverter-CLI.exe"
+        
+        Write-Host "`nFile sizes:" -ForegroundColor Yellow
+        Write-Host "CLI: $([math]::Round($filesCLI.Length/1MB, 2)) MB" -ForegroundColor White
