@@ -4,3 +4,4 @@ PyYAML
 mypy
 types-PyYAML
 PyQt5
+pyinstaller
