@@ -1,0 +1,11 @@
+message: Hello World!
+numbers:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+active: true
+user:
+  id: 123
+  name: Test User
